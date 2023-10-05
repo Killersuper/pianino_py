@@ -228,5 +228,6 @@ while True:
                 screen.blit(text, text_rect)
                 is_play = False
 
+    print(99)
     pg.display.flip()
     clock.tick(fps)
