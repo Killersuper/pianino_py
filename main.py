@@ -134,13 +134,13 @@ class Song:
 
 screen = pg.display.set_mode(SIZE)
 
-fps = 500
+fps = 300
 clock = pg.time.Clock()
 
 next_note = 0  # номер ноты, которую нужно сыграть следующей
 sound = None  # звук, который сейчас играет
 
-pg.mixer.music.set_volume(0.3)
+pg.mixer.music.set_volume(1)
 
 
 def play_note():
@@ -149,7 +149,8 @@ def play_note():
     if next_note>0:
         sound.fadeout(1000) #метод, позволяющий звуку плавно затихнуть.
 
-    sound=pg.mixer.Sound('Sounds/'+playing_song.notes[next_note]+'.ogg')
+    sound=pg.mixer.Sound('Sounds/'+playing_song.notes[next_note]+'.ogg') 
+    sound.set_volume(0.1)
     sound.play()
     next_note+=1
 
@@ -166,14 +167,8 @@ background_menu = pg.transform.scale(background_menu, SIZE)
 
 is_play = False
 
-# ВРЕМЕННЫЙ КОД для запуска без меню
-screen_notes = pg.sprite.Group()
-created_notes = 0
-next_note = 0
-timer = time.time()
-mode = "play"
-playing_song = song2
-is_play = True
+
+mode='menu'
 
 while True:
     for event in pg.event.get():
@@ -192,7 +187,37 @@ while True:
         if isinstance(sound, pg.mixer.Sound):
             sound.stop()
 
+        mouse_pos=pg.mouse.get_pos()
+
+        for song in Song.songs:
+            if song.rect.collidepoint(mouse_pos):
+                song.color='green'
+            else:
+                song.color='red'
+
+        if pg.mouse.get_pressed()[0]:
+            screen_notes = pg.sprite.Group()
+            created_notes = 0
+            next_note = 0
+            timer = time.time()
+            for song in Song.songs:
+                if song.rect.collidepoint(mouse_pos):
+                    playing_song=song
+                    mode='play'
+
+
         # место для отрисовки меню
+        screen.blit(background_menu,(0,0))
+
+        y=1
+        for song in Song.songs:
+            pg.draw.rect(screen,pg.Color(song.color), song.rect,3)
+            screen.blit(song.text,(30,100*y+5))
+            y+=1
+
+
+
+
 
     if mode == "play":
         if is_play:  # только если сейчас идёт игра - нет проигрыша или победы
@@ -228,6 +253,6 @@ while True:
                 screen.blit(text, text_rect)
                 is_play = False
 
-    print(99)
+    # print(99)
     pg.display.flip()
     clock.tick(fps)
