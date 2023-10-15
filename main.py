@@ -221,7 +221,6 @@ while True:
 
     if mode == "play":
         if is_play:  # только если сейчас идёт игра - нет проигрыша или победы
-            screen_notes.update()
             if created_notes < len(playing_song.notes) and \
                 time.time() - timer >=playing_song.interval * playing_song.duration[created_notes]:
                 if playing_song.duration[created_notes]==1:
@@ -252,6 +251,14 @@ while True:
                 text_rect = text.get_rect(center=(SIZE[0] // 2, SIZE[1] // 2))
                 screen.blit(text, text_rect)
                 is_play = False
+
+        for notes in screen_notes:
+            if notes.rect.y >500 and not notes.played:
+                text = f1.render("ПОРАЖЕНИЕ", True, pg.Color("red"))
+                text_rect = text.get_rect(center=(SIZE[0] // 2, SIZE[1] // 2))
+                screen.blit(text, text_rect)
+                is_play = False
+
 
     # print(99)
     pg.display.flip()
