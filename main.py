@@ -25,7 +25,7 @@ BIRCH_DURATION = [1, 1, 1, 1, 2, 1, 1, 2, 2,
                   2, 1, 2, 1, 1, 2, 2]
 
 MORNING_NOTES = ["c5", "a4", "g4", "f4", "g4", "a4", "c5", "a4", "f4", "g4", "a4", "g4", "a4", "c5", "a4",
-                 "c5", "d5", "a4", "d5", "c5", "a4", "f4", "c4", "a3", "g3", "f3", ]
+                 "c5", "d5", "a4", "d5", "c5", "a4", "f4", "c4", "a3", "g3", "f3" ]
 MORNING_DURATION = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2]
 
@@ -231,7 +231,6 @@ while True:
                 created_notes +=1
             screen_notes.update()
 
-
         screen.fill(pg.Color("white"))
 
         for i in range(4):  # отрисовка дорожек
@@ -251,6 +250,12 @@ while True:
                 text_rect = text.get_rect(center=(SIZE[0] // 2, SIZE[1] // 2))
                 screen.blit(text, text_rect)
                 is_play = False
+
+        for notes in screen_notes:
+            if next_note < len(playing_song.notes):
+                text_n = f1.render(f"{playing_song.notes[next_note]}", True, pg.Color("orange"))
+                text_n_rect = text_n.get_rect(center=(350,60))
+                screen.blit(text_n, text_n_rect)
 
         for notes in screen_notes:
             if notes.rect.y >500 and not notes.played:
